@@ -16,7 +16,6 @@ public class MainActivity extends Activity {
 
 	Process p;
 
-
 	public void RunAsRoot(String[] cmds) throws IOException{
 		Process p = Runtime.getRuntime().exec("su");
 		DataOutputStream os = new DataOutputStream(p.getOutputStream());            
@@ -32,20 +31,14 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-
-
-
 		String ch = "";
 
 
 		final RadioButton c = (RadioButton) findViewById(R.id.radioButton1);
-
 		final RadioButton d = (RadioButton) findViewById(R.id.radioButton2);
 
 		SharedPreferences settings = getSharedPreferences("UserInfo", 0);
 		ch = settings.getString("set", "").toString();
-
-		//Log.d("SDS", ch);
 
 		if(ch.contains("enabled"))
 		{
@@ -61,12 +54,6 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-		
-		//	String m = "sed -i 's//insmod.*//insmod \//system\//lib\//modules\//atmel_mxt_ts.ko dt2w_switch=1//' //system//bin//atmel_touch.sh"
-			//sed -i 's/ATMEL_DRIVER=\/system.*/ATMEL_DRIVER=\"\/system\/lib\/modules\/atmel_mxt_ts.ko/' /system/bin/atmel_touch.sh
-			//sed -i 's/ATMEL_DRIVER=\"\/system.*/ATMEL_DRIVER=\/system\/lib\/modules\/atmel_mxt_ts.ko\ dt2w_switch=1/' /system/bin/atmel_touch.sh
-		//	;
 		}
 		else
 		{
@@ -102,10 +89,7 @@ public class MainActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
-
 			}
-
 		});
 
 		d.setOnClickListener(new OnClickListener() {
@@ -127,16 +111,9 @@ public class MainActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
-
-
 			}
-
 		});
-
-
 	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
