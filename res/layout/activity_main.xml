@@ -6,12 +6,49 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background"
     tools:context=".MainActivity" >
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:text="Info:" />
+
+    <CheckBox
+        android:id="@+id/checkBox3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:textColor="#ffffff"
+        android:clickable="false"
+        android:text="atmel_touch.sh is present" />
+
+    <CheckBox
+        android:id="@+id/checkBox1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkBox3"
+        android:clickable="false"
+        android:textColor="#ffffff"
+        android:text="Atmel_mxt_ts Module Present" />
+
+    <CheckBox
+        android:id="@+id/checkBox2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkBox1"
+        android:clickable="false"
+        android:textColor="#ffffff"
+        android:text="Module Has DT2W_Switch" />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/checkBox2"
+        android:textColor="#ffffff"
         android:text="Double Tap 2 Wake" />
 
     <RadioButton
@@ -20,6 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView1"
+        android:textColor="#ffffff"
         android:text="Enable" />
 
     <RadioButton
@@ -28,6 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/radioButton1"
+        android:textColor="#ffffff"
         android:text="Disable" />
 
 </RelativeLayout>

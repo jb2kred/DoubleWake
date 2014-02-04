@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 
 public class MainActivity extends Activity {
@@ -40,18 +41,49 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		File file = new File("/system/bin/atmel_touch.sh");
-
-		boolean exists = file.exists();
-		
-		if(!exists)
-		{
-			System.exit(0);
-		}
-		
-
 		final RadioButton c = (RadioButton) findViewById(R.id.radioButton1);
 		final RadioButton d = (RadioButton) findViewById(R.id.radioButton2);
+		CheckBox check1 = (CheckBox) findViewById(R.id.checkBox1);
+		CheckBox check2 = (CheckBox) findViewById(R.id.checkBox2);
+		CheckBox check3 = (CheckBox) findViewById(R.id.checkBox3);
+
+		File file = new File("/system/lib/modules/atmel_mxt_ts.ko");
+
+		boolean  exists = file.exists();
+
+		if(exists)
+		{
+			check1.setChecked(true);
+		}
+
+		file = new File("/sys/module/atmel_mxt_ts/parameters/dt2w_switch");
+
+		exists = file.exists();
+
+		if(exists)
+		{
+			check2.setChecked(true);
+		}
+
+		file = new File("/system/bin/atmel_touch.sh");
+
+		exists = file.exists();
+
+		if(exists)
+		{
+			check3.setChecked(true);
+		}
+
+		if(check1.isChecked() && check2.isChecked() && check3.isChecked())
+		{
+			c.setEnabled(true);
+			d.setEnabled(true);
+		}
+		else
+		{
+			c.setEnabled(false);
+			d.setEnabled(false);
+		}
 
 		settings = getSharedPreferences("UserInfo", 0);
 		String ch = settings.getString("set", "").toString();
@@ -76,7 +108,6 @@ public class MainActivity extends Activity {
 					prefs("enabled");
 					RunAsRoot(command_enable);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -93,18 +124,9 @@ public class MainActivity extends Activity {
 					prefs("disabled");
 					RunAsRoot(command_disable);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
 }
