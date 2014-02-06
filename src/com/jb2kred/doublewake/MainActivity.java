@@ -151,7 +151,6 @@ public class MainActivity extends Activity {
 					return;
 				}
 
-
 				if(secondClick ==true) {
 					int distance = (int)Math.sqrt((x-x1)*(x-x1) + (y-y1)*(y-y1));
 					secondClick =false;
@@ -162,8 +161,6 @@ public class MainActivity extends Activity {
 					Log.i("MyView", "time between click: " + diff);
 					if (diff > 100 && diff< 400)
 					{
-						
-				
 						if (distance < 65)
 						{
 							tmp.setTextColor(Color.WHITE);
@@ -174,8 +171,6 @@ public class MainActivity extends Activity {
 							tmp.setTextColor(Color.RED);
 							tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps are Between 100 - 400 milliseconds\n"  + "Taps are too far Apart"));
 						}
-										
-						
 					}
 					else
 					{
@@ -190,11 +185,8 @@ public class MainActivity extends Activity {
 							tmp.setTextColor(Color.RED);
 							tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps need to be within 100 - 400 milliseconds\n"  + "Taps are too far Apart"));
 						}
-							
 					}
-
 				}
-
 			}
 		});
 
