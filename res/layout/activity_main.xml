@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text="Required Info:"
             android:textColor="#ffffff"
-            android:textSize="32sp" />
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <CheckBox
             android:id="@+id/checkBox3"
@@ -29,7 +29,7 @@
             android:clickable="false"
             android:text="atmel_touch.sh is present"
             android:textColor="#ffffff"
-            android:textSize="32sp" />
+          android:textAppearance="?android:attr/textAppearanceLarge"/>
 
         <CheckBox
             android:id="@+id/checkBox1"
@@ -38,7 +38,7 @@
             android:clickable="false"
             android:text="Atmel_mxt_ts Module Present"
             android:textColor="#ffffff"
-            android:textSize="32sp" />
+           android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <CheckBox
             android:id="@+id/checkBox2"
@@ -47,7 +47,7 @@
             android:clickable="false"
             android:text="Module Has DT2W_Switch"
             android:textColor="#ffffff"
-            android:textSize="32sp" />
+          android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/textView1"
@@ -56,7 +56,7 @@
             android:paddingTop="10dp"
             android:text="Double Tap 2 Wake"
             android:textColor="#ffffff"
-            android:textSize="32sp" />
+           android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <RadioButton
             android:id="@+id/radioButton1"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:text="Enable"
             android:textColor="#ffffff"
-            android:textSize="32sp" />
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
 
         <RadioButton
             android:id="@+id/radioButton2"
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:text="Disable"
             android:textColor="#ffffff"
-            android:textSize="32sp" />
+           android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/textView3"

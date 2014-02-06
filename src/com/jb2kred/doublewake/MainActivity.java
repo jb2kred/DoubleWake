@@ -8,8 +8,10 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -22,6 +24,10 @@ public class MainActivity extends Activity {
 	SharedPreferences.Editor editor;
 	long initialTime = 0;
 	long endTime = 0;
+	float x;
+	float y;
+	float x1;
+	float y1;
 	boolean firstClick = false;
 	boolean secondClick = false;
 
@@ -105,6 +111,26 @@ public class MainActivity extends Activity {
 			d.setChecked(true);
 		}
 
+		view1.setOnTouchListener(new OnTouchListener()
+		{
+			public boolean onTouch(View v ,MotionEvent ev)
+			{
+						
+				if(secondClick == true)
+				{
+					x1 = ev.getX();
+					y1 = ev.getY();	
+				}
+				else
+				{
+					x = ev.getX();
+					y = ev.getY();	
+				}
+				
+				return false;
+			}
+		});
+		
 		view1.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -127,20 +153,44 @@ public class MainActivity extends Activity {
 
 
 				if(secondClick ==true) {
+					int distance = (int)Math.sqrt((x-x1)*(x-x1) + (y-y1)*(y-y1));
 					secondClick =false;
+					
 					endTime = System.currentTimeMillis();
 					long diff = endTime - initialTime;
 					initialTime = endTime;
 					Log.i("MyView", "time between click: " + diff);
 					if (diff > 100 && diff< 400)
 					{
-						tmp.setTextColor(Color.WHITE);
-						tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps are Between 100 - 400 milliseconds"));
+						
+				
+						if (distance < 65)
+						{
+							tmp.setTextColor(Color.WHITE);
+							tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps are Between 100 - 400 milliseconds\n"));	
+						}
+						else
+						{
+							tmp.setTextColor(Color.RED);
+							tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps are Between 100 - 400 milliseconds\n"  + "Taps are too far Apart"));
+						}
+										
+						
 					}
 					else
 					{
-						tmp.setTextColor(Color.RED);
-						tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps need to be within 100 - 400 milliseconds"));	
+						if (distance < 65)
+						{
+							tmp.setTextColor(Color.RED);
+							tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps need to be within 100 - 400 milliseconds\n"));	
+						}
+						else
+						{
+							
+							tmp.setTextColor(Color.RED);
+							tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps need to be within 100 - 400 milliseconds\n"  + "Taps are too far Apart"));
+						}
+							
 					}
 
 				}
