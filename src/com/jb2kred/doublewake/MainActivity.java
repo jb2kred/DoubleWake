@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,10 +23,8 @@ public class MainActivity extends Activity {
 	SharedPreferences.Editor editor;
 	long initialTime = 0;
 	long endTime = 0;
-	float x;
-	float y;
-	float x1;
-	float y1;
+	float x,x1;
+	float y,y1;
 	boolean firstClick = false;
 	boolean secondClick = false;
 
@@ -158,7 +155,7 @@ public class MainActivity extends Activity {
 					endTime = System.currentTimeMillis();
 					long diff = endTime - initialTime;
 					initialTime = endTime;
-					Log.i("MyView", "time between click: " + diff);
+				
 					if (diff > 100 && diff< 400)
 					{
 						if (distance < 65)
