@@ -6,11 +6,13 @@ import java.io.IOException;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.view.Menu;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -18,6 +20,10 @@ public class MainActivity extends Activity {
 	String[] command_disable = {"mount -o rw,remount /system","sed -i 's/insmod.*/insmod \\/system\\/lib\\/modules\\/atmel_mxt_ts.ko dt2w_switch=0/' /system/bin/atmel_touch.sh","echo -n 0 > /sys/module/atmel_mxt_ts/parameters/dt2w_switch","mount -o ro,remount /system"};
 	SharedPreferences settings;
 	SharedPreferences.Editor editor;
+	long initialTime = 0;
+	long endTime = 0;
+	boolean firstClick = false;
+	boolean secondClick = false;
 
 	public void RunAsRoot(String[] cmds) throws IOException{
 		Process p = Runtime.getRuntime().exec("su");
@@ -43,6 +49,8 @@ public class MainActivity extends Activity {
 
 		final RadioButton c = (RadioButton) findViewById(R.id.radioButton1);
 		final RadioButton d = (RadioButton) findViewById(R.id.radioButton2);
+		final TextView view1 = (TextView) findViewById(R.id.textView4);
+
 		CheckBox check1 = (CheckBox) findViewById(R.id.checkBox1);
 		CheckBox check2 = (CheckBox) findViewById(R.id.checkBox2);
 		CheckBox check3 = (CheckBox) findViewById(R.id.checkBox3);
@@ -96,6 +104,49 @@ public class MainActivity extends Activity {
 		{
 			d.setChecked(true);
 		}
+
+		view1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+
+				if(firstClick == false && secondClick ==false)
+				{
+					firstClick = true;
+				}
+
+				TextView tmp = (TextView)v;
+
+				if(firstClick == true)
+				{
+					initialTime = System.currentTimeMillis();
+					firstClick = false;
+					secondClick =true;
+					return;
+				}
+
+
+				if(secondClick ==true) {
+					secondClick =false;
+					endTime = System.currentTimeMillis();
+					long diff = endTime - initialTime;
+					initialTime = endTime;
+					Log.i("MyView", "time between click: " + diff);
+					if (diff > 100 && diff< 400)
+					{
+						tmp.setTextColor(Color.WHITE);
+						tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps are Between 100 - 400 milliseconds"));
+					}
+					else
+					{
+						tmp.setTextColor(Color.RED);
+						tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps need to be within 100 - 400 milliseconds"));	
+					}
+
+				}
+
+			}
+		});
 
 		c.setOnClickListener(new OnClickListener() {
 
