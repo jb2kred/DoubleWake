@@ -17,8 +17,9 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-	String[] command_enable = {"mount -o rw,remount /system","sed -i 's/insmod.*/insmod \\/system\\/lib\\/modules\\/atmel_mxt_ts.ko dt2w_switch=1/' /system/bin/atmel_touch.sh","echo -n 1 > /sys/module/atmel_mxt_ts/parameters/dt2w_switch","mount -o ro,remount /system"};
-	String[] command_disable = {"mount -o rw,remount /system","sed -i 's/insmod.*/insmod \\/system\\/lib\\/modules\\/atmel_mxt_ts.ko dt2w_switch=0/' /system/bin/atmel_touch.sh","echo -n 0 > /sys/module/atmel_mxt_ts/parameters/dt2w_switch","mount -o ro,remount /system"};
+	String[] command_enable_s2w = {"mount -o rw,remount /system","sed -i 's/insmod.*/insmod \\/system\\/lib\\/modules\\/atmel_mxt_ts.ko wake_switch=2/' /system/bin/atmel_touch.sh","echo -n 2 > /sys/module/atmel_mxt_ts/parameters/wake_switch","mount -o ro,remount /system"};
+	String[] command_enable_dt2w = {"mount -o rw,remount /system","sed -i 's/insmod.*/insmod \\/system\\/lib\\/modules\\/atmel_mxt_ts.ko wake_switch=1/' /system/bin/atmel_touch.sh","echo -n 1 > /sys/module/atmel_mxt_ts/parameters/wake_switch","mount -o ro,remount /system"};
+	String[] command_disable = {"mount -o rw,remount /system","sed -i 's/insmod.*/insmod \\/system\\/lib\\/modules\\/atmel_mxt_ts.ko wake_switch=0/' /system/bin/atmel_touch.sh","echo -n 0 > /sys/module/atmel_mxt_ts/parameters/wake_switch","mount -o ro,remount /system"};
 	SharedPreferences settings;
 	SharedPreferences.Editor editor;
 	long initialTime = 0;
@@ -52,6 +53,7 @@ public class MainActivity extends Activity {
 
 		final RadioButton c = (RadioButton) findViewById(R.id.radioButton1);
 		final RadioButton d = (RadioButton) findViewById(R.id.radioButton2);
+		final RadioButton e = (RadioButton) findViewById(R.id.radioButton3);
 		final TextView view1 = (TextView) findViewById(R.id.textView4);
 
 		CheckBox check1 = (CheckBox) findViewById(R.id.checkBox1);
@@ -67,7 +69,7 @@ public class MainActivity extends Activity {
 			check1.setChecked(true);
 		}
 
-		file = new File("/sys/module/atmel_mxt_ts/parameters/dt2w_switch");
+		file = new File("/sys/module/atmel_mxt_ts/parameters/wake_switch");
 
 		exists = file.exists();
 
@@ -99,13 +101,24 @@ public class MainActivity extends Activity {
 		settings = getSharedPreferences("UserInfo", 0);
 		String ch = settings.getString("set", "").toString();
 
-		if(ch.contains("enabled"))
+		if(ch.contains("enabled_dt2w"))
 		{
 			c.setChecked(true);
+			e.setChecked(false);
+			d.setChecked(false);
 		}
-		else
+		if(ch.contains("enabled_s2w"))
+		{
+			e.setChecked(true);
+			c.setChecked(false);
+			d.setChecked(false);
+			view1.setText("When using Sweep2Wake\nSweep from middle points of axis\n");
+		}
+		if(ch.contains("disabled"))
 		{
 			d.setChecked(true);
+			c.setChecked(false);
+			e.setChecked(false);
 		}
 
 		view1.setOnTouchListener(new OnTouchListener()
@@ -133,70 +146,98 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 
 
-				if(firstClick == false && secondClick ==false)
+				if(e.isChecked())
 				{
-					firstClick = true;
 				}
-
-				TextView tmp = (TextView)v;
-
-				if(firstClick == true)
+				if(c.isChecked())
 				{
-					initialTime = System.currentTimeMillis();
-					firstClick = false;
-					secondClick =true;
-					return;
-				}
+					if(firstClick == false && secondClick ==false)
+					{
+						firstClick = true;
+					}
 
-				if(secondClick ==true) {
-					int distance = (int)Math.sqrt((x-x1)*(x-x1) + (y-y1)*(y-y1));
-					secondClick =false;
+					TextView tmp = (TextView)v;
+
+					if(firstClick == true)
+					{
+						initialTime = System.currentTimeMillis();
+						firstClick = false;
+						secondClick =true;
+						return;
+					}
+
+					if(secondClick ==true) {
+						int distance = (int)Math.sqrt((x-x1)*(x-x1) + (y-y1)*(y-y1));
+						secondClick =false;
+						
+						endTime = System.currentTimeMillis();
+						long diff = endTime - initialTime;
+						initialTime = endTime;
 					
-					endTime = System.currentTimeMillis();
-					long diff = endTime - initialTime;
-					initialTime = endTime;
-				
-					if (diff > 100 && diff< 400)
-					{
-						if (distance < 65)
+						if (diff > 100 && diff< 400)
 						{
-							tmp.setTextColor(Color.WHITE);
-							tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps are Between 100 - 400 milliseconds\n"));	
+							if (distance < 65)
+							{
+								tmp.setTextColor(Color.WHITE);
+								tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps are Between 100 - 400 milliseconds\n"));	
+							}
+							else
+							{
+								tmp.setTextColor(Color.RED);
+								tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps are Between 100 - 400 milliseconds\n"  + "Taps are too far Apart"));
+							}
 						}
 						else
 						{
-							tmp.setTextColor(Color.RED);
-							tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps are Between 100 - 400 milliseconds\n"  + "Taps are too far Apart"));
-						}
-					}
-					else
-					{
-						if (distance < 65)
-						{
-							tmp.setTextColor(Color.RED);
-							tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps need to be within 100 - 400 milliseconds\n"));	
-						}
-						else
-						{
-							
-							tmp.setTextColor(Color.RED);
-							tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps need to be within 100 - 400 milliseconds\n"  + "Taps are too far Apart"));
+							if (distance < 65)
+							{
+								tmp.setTextColor(Color.RED);
+								tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps need to be within 100 - 400 milliseconds\n"));	
+							}
+							else
+							{
+								
+								tmp.setTextColor(Color.RED);
+								tmp.setText(String.valueOf(diff + " milliseconds between taps\n Taps need to be within 100 - 400 milliseconds\n"  + "Taps are too far Apart"));
+							}
 						}
 					}
 				}
+				
+				
 			}
 		});
 
+		e.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				c.setChecked(false);
+				d.setChecked(false);
+				
+				view1.setText("When using Sweep2Wake\nSweep from middle points of axis\n");
+				
+				try {
+					prefs("enabled_s2w");
+					RunAsRoot(command_enable_s2w);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
 		c.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
 				d.setChecked(false);
+				e.setChecked(false);
 
 				try {
-					prefs("enabled");
-					RunAsRoot(command_enable);
+					prefs("enabled_dt2w");
+					RunAsRoot(command_enable_dt2w);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -209,7 +250,8 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 
 				c.setChecked(false);
-
+				e.setChecked(false);
+				
 				try {
 					prefs("disabled");
 					RunAsRoot(command_disable);
